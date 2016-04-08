@@ -2,9 +2,9 @@ package gliath.sb.handler;
 
 import gliath.sb.ModLogger;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.settings.GameSettings;
-import net.minecraft.util.SoundCategory;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -25,7 +25,7 @@ public class SoundEventHandler {
     @SideOnly(Side.CLIENT)
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onPostInitGui(GuiScreenEvent.InitGuiEvent.Post event) {
-        if (event.getGui() instanceof GuiMainMenu && !mcHasInitiated) {
+        if (event.gui instanceof GuiMainMenu && !mcHasInitiated) {
             mcHasInitiated = true;
         }
     }

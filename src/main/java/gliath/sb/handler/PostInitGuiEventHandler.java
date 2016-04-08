@@ -19,27 +19,27 @@ public class PostInitGuiEventHandler {
 
     @SubscribeEvent
     public void onPostInitGuiEvent(GuiScreenEvent.InitGuiEvent.Post event) {
-        if (event.getGui() instanceof GuiScreenOptionsSounds) {
-            for (int i = 0; i < event.getButtonList().size(); i++) {
-                if (event.getButtonList().get(i) instanceof GuiOptionButton) { // is the show subtitle button
-                    GuiOptionButton subButton = (GuiOptionButton) event.getButtonList().get(i);
-                    subButton.xPosition = event.getGui().width / 2 - 155;
+        if (event.gui instanceof GuiScreenOptionsSounds) {
+            for (int i = 0; i < event.buttonList.size(); i++) {
+                if (event.buttonList.get(i) instanceof GuiOptionButton) { // is the show subtitle button
+                    GuiOptionButton subButton = (GuiOptionButton) event.buttonList.get(i);
+                    subButton.xPosition = event.gui.width / 2 - 155;
                     break;
                 }
             }
 
-            int x = event.getGui().width / 2 + 5;
-            int y = event.getGui().height / 6 - 12 + 144;
-            event.getButtonList().add(new GuiButton(References.MOD_OPTIONSBUTTON_ID, x, y, 150, 20, getDisplayString()));
+            int x = event.gui.width / 2 + 5;
+            int y = event.gui.height / 6 - 12 + 144;
+            event.buttonList.add(new GuiButton(References.MOD_OPTIONSBUTTON_ID, x, y, 150, 20, getDisplayString()));
         }
     }
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onPreButtonPress(GuiScreenEvent.ActionPerformedEvent.Pre event) {
-        if (event.getButton().id == References.MOD_OPTIONSBUTTON_ID) {
+        if (event.button.id == References.MOD_OPTIONSBUTTON_ID) {
             ConfigurationHandler.toggleSetting();
-            event.getButton().displayString = getDisplayString();
+            event.button.displayString = getDisplayString();
             event.setCanceled(true);
 
             ConfigurationHandler.configuration.get(Configuration.CATEGORY_GENERAL, "musicInBackground", false).set(ConfigurationHandler.musicInBackground);

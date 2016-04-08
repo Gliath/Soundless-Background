@@ -25,12 +25,11 @@ public class ConfigurationHandler {
     }
 
     private static void loadConfiguration() {
-        Property prop = configuration.get(Configuration.CATEGORY_GENERAL, "musicInBackground", false);
+        Property prop = configuration.get(Configuration.CATEGORY_GENERAL, "musicInBackground", false, "When this setting is false, no sounds will be heard, if Minecraft is in the background.");
         prop.setLanguageKey("sb.configgui.musicOnBackground")
                 .setRequiresMcRestart(false)
                 .setRequiresWorldRestart(false)
-                .setDefaultValue(false)
-                .setComment("When this setting is false, no sounds will be heard, if Minecraft is in the background.");
+                .setDefaultValue(false);
 
         musicInBackground = prop.getBoolean(false);
 
@@ -40,7 +39,7 @@ public class ConfigurationHandler {
 
     @SubscribeEvent
     public void onConfigurationChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.getModID().equalsIgnoreCase(References.MOD_ID))
+        if (event.modID.equalsIgnoreCase(References.MOD_ID))
             loadConfiguration();
     }
 }
