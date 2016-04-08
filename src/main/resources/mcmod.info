@@ -1,0 +1,16 @@
+[
+{
+  "modid": "SB",
+  "name": "Soundless Background",
+  "description": "Disables music when Minecraft is in the background.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Gliath"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
