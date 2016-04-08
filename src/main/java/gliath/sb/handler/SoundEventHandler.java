@@ -1,16 +1,16 @@
 package gliath.sb.handler;
 
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import gliath.sb.ModLogger;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.settings.GameSettings;
-import net.minecraft.util.SoundCategory;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.Display;
 
 public class SoundEventHandler {
@@ -25,7 +25,7 @@ public class SoundEventHandler {
     @SideOnly(Side.CLIENT)
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onPostInitGui(GuiScreenEvent.InitGuiEvent.Post event) {
-        if (event.getGui() instanceof GuiMainMenu && !mcHasInitiated) {
+        if (event.gui instanceof GuiMainMenu && !mcHasInitiated) {
             mcHasInitiated = true;
         }
     }

@@ -1,13 +1,13 @@
 package gliath.sb;
 
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import gliath.sb.handler.ConfigurationHandler;
 import gliath.sb.handler.PostInitGuiEventHandler;
 import gliath.sb.handler.SoundEventHandler;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = References.MOD_ID, name=References.MOD_NAME, version=References.MOD_VERSION, guiFactory = References.MOD_GUIFACTORY, clientSideOnly = true)
+@Mod(modid = References.MOD_ID, name=References.MOD_NAME, version=References.MOD_VERSION, guiFactory = References.MOD_GUIFACTORY)
 public class SoundlessBackground {
 
     @Mod.Instance(References.MOD_ID)
