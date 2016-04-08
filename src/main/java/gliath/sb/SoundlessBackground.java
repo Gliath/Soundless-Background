@@ -1,5 +1,6 @@
 package gliath.sb;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import gliath.sb.handler.ConfigurationHandler;
@@ -18,7 +19,7 @@ public class SoundlessBackground {
         ConfigurationHandler.init(event.getSuggestedConfigurationFile());
         ModLogger.info("Registering handlers");
         MinecraftForge.EVENT_BUS.register(new ConfigurationHandler());
-        MinecraftForge.EVENT_BUS.register(new SoundEventHandler());
         MinecraftForge.EVENT_BUS.register(new PostInitGuiEventHandler());
+        FMLCommonHandler.instance().bus().register(new SoundEventHandler());
     }
 }

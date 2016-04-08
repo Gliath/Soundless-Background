@@ -8,7 +8,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import gliath.sb.References;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiOptionButton;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreenOptionsSounds;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -24,6 +24,9 @@ public class PostInitGuiEventHandler {
             int y = event.gui.height / 6 + 120;
             event.buttonList.add(new GuiButton(References.MOD_OPTIONSBUTTON_ID, x, y, 150, 20, getDisplayString()));
         }
+
+        if (event.gui instanceof GuiMainMenu && !SoundEventHandler.isMcInitiated())
+            SoundEventHandler.mcHasInitiated();
     }
 
     @SideOnly(Side.CLIENT)
@@ -45,6 +48,6 @@ public class PostInitGuiEventHandler {
 
     private String getDisplayString() {
         boolean musicONinBackground = ConfigurationHandler.musicInBackground;
-        return I18n.format("gui.musicOnBackground") + ": " + (musicONinBackground ? I18n.format("options.on") : I18n.format("options.off"));
+        return "Music in Background: " + (musicONinBackground ? I18n.format("options.on") : I18n.format("options.off"));
     }
 }
