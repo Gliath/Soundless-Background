@@ -1,3 +1,28 @@
 #GuiButton name
-gui.musicOnBackground=Music in Background
-sb.configgui.musicOnBackground=Music ON in background
+gui.musicOnBackground=Background Settings
+gui.musicOnBackground.title=Music in Background Options
+gui.musicOnBackground.toggleAll=Toggle All Settings
+gui.musicOnBackground.reset=Reset to default
+
+#ModConfig Gui
+sb.configgui.musicOnBackground.title=Soundless Background Configuration
+sb.configgui.musicOnBackground.master=Master ON in background
+sb.configgui.musicOnBackground.master.comment=When this setting is false, no sounds (all categories) will be heard, if Minecraft is in the background.
+sb.configgui.musicOnBackground.music=Music ON in background
+sb.configgui.musicOnBackground.music.comment=When this setting is false, no sounds (music category) will be heard, if Minecraft is in the background.
+sb.configgui.musicOnBackground.record=Records ON in background
+sb.configgui.musicOnBackground.record.comment=When this setting is false, no sounds (records category) will be heard, if Minecraft is in the background.
+sb.configgui.musicOnBackground.weather=Weather ON in background
+sb.configgui.musicOnBackground.weather.comment=When this setting is false, no sounds (weather category) will be heard, if Minecraft is in the background.
+sb.configgui.musicOnBackground.block=Blocks ON in background
+sb.configgui.musicOnBackground.block.comment=When this setting is false, no sounds (blocks category) will be heard, if Minecraft is in the background.
+sb.configgui.musicOnBackground.hostile=Hostile ON in background
+sb.configgui.musicOnBackground.hostile.comment=When this setting is false, no sounds (hostile category) will be heard, if Minecraft is in the background.
+sb.configgui.musicOnBackground.neutral=Neutral ON in background
+sb.configgui.musicOnBackground.neutral.comment=When this setting is false, no sounds (neutral category) will be heard, if Minecraft is in the background.
+sb.configgui.musicOnBackground.player=Players ON in background
+sb.configgui.musicOnBackground.player.comment=When this setting is false, no sounds (players category) will be heard, if Minecraft is in the background.
+sb.configgui.musicOnBackground.ambient=Ambient ON in background
+sb.configgui.musicOnBackground.ambient.comment=When this setting is false, no sounds (ambient category) will be heard, if Minecraft is in the background.
+sb.configgui.musicOnBackground.voice=Voice ON in background
+sb.configgui.musicOnBackground.voice.comment=When this setting is false, no sounds (voice category) will be heard, if Minecraft is in the background.
