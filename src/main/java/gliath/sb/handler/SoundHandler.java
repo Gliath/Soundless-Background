@@ -9,53 +9,63 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.Display;
 
 public class SoundHandler {
-    private float[] soundLevels;
+    private float[] originalSoundLevels;
     private boolean mcHasInitiated;
+    private boolean mcHasBeenSilenced;
 
     public SoundHandler() {
-        soundLevels = new float[SoundCategory.values().length];
+        originalSoundLevels = new float[SoundCategory.values().length];
+        for (int i = 0; i < originalSoundLevels.length; i++)
+            originalSoundLevels[i] = -1.0f;
+
         mcHasInitiated = false;
+        mcHasBeenSilenced = false;
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onPostInitGui(GuiScreenEvent.InitGuiEvent.Post event) {
-        if (event.getGui() instanceof GuiMainMenu && !mcHasInitiated) {
+        if (event.getGui() instanceof GuiMainMenu && !mcHasInitiated)
             mcHasInitiated = true;
-        }
     }
 
     @SubscribeEvent
     public void handleRenderTickEvent(RenderTickEvent event) {
+        if (!mcHasInitiated)
+            return;
+
         try {
             boolean hasDisplayedConsoleMessage = false;
-            if (mcHasInitiated && !Display.isActive()) {
-                GameSettings gs = Minecraft.getMinecraft().gameSettings;
+            if (!Display.isActive() && !mcHasBeenSilenced) {
                 for (SoundCategory sc : SoundCategory.values())
-                    if (!ConfigurationHandler.getSetting(sc) && soundLevels[sc.ordinal()] == 0.0f) {
+                    if (((float) ConfigurationHandler.getSetting(sc)) < 100.0f) { // 100.0f means it doesn't silence the sound
                         if (!hasDisplayedConsoleMessage) {
                             ModLogger.info("Window inactive, silencing sound");
                             hasDisplayedConsoleMessage = true;
+                            mcHasBeenSilenced = true; // More like: "is going to be silenced"
                         }
 
-                        soundLevels[sc.ordinal()] = gs.getSoundLevel(sc);
-                        gs.setSoundLevel(sc, 0.0f);
+                        originalSoundLevels[sc.ordinal()] = Minecraft.getMinecraft().gameSettings.getSoundLevel(sc);
+                        float newSoundLevel = originalSoundLevels[sc.ordinal()] * (((float) ConfigurationHandler.getSetting(sc)) / 100.0f);
+
+                        Minecraft.getMinecraft().gameSettings.setSoundLevel(sc, newSoundLevel);
                     }
-            } else if (Display.isActive()) {
-                for (SoundCategory sc : SoundCategory.values())
-                    if (soundLevels[sc.ordinal()] != 0.0f) {
+            } else if (Display.isActive() && mcHasBeenSilenced) {
+                mcHasBeenSilenced = false; // Like above, it's going to be unsilenced
+
+                for (SoundCategory sc : SoundCategory.values()) {
+                    if (originalSoundLevels[sc.ordinal()] >= 0.0f) {
                         if (!hasDisplayedConsoleMessage) {
                             ModLogger.info("Window active, restoring the sound");
                             hasDisplayedConsoleMessage = true;
                         }
 
-                        Minecraft.getMinecraft().gameSettings.setSoundLevel(sc, soundLevels[sc.ordinal()]);
-                        soundLevels[sc.ordinal()] = 0.0f;
+                        Minecraft.getMinecraft().gameSettings.setSoundLevel(sc, originalSoundLevels[sc.ordinal()]);
+                        originalSoundLevels[sc.ordinal()] = -1.0f;
                     }
+                }
             }
         } catch (Exception e) {
             ModLogger.error(e.getMessage());

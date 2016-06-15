@@ -9,8 +9,6 @@ import net.minecraft.client.gui.GuiScreenOptionsSounds;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class OptionsMenuHandler {
 
@@ -18,7 +16,7 @@ public class OptionsMenuHandler {
     public void onPostInitGuiEvent(GuiScreenEvent.InitGuiEvent.Post event) {
         if (event.getGui() instanceof GuiScreenOptionsSounds) {
             for (int i = 0; i < event.getButtonList().size(); i++) {
-                if (event.getButtonList().get(i) instanceof GuiOptionButton) { // is the subtitle button
+                if (event.getButtonList().get(i) instanceof GuiOptionButton) { // if it is the subtitle button, reposition it
                     GuiOptionButton subButton = (GuiOptionButton) event.getButtonList().get(i);
                     subButton.xPosition = event.getGui().width / 2 - 155;
                     break;
