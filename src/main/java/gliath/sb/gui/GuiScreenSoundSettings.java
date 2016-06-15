@@ -14,7 +14,6 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
-
 public class GuiScreenSoundSettings extends GuiScreen {
     private static final int BUTTON_START_ID = References.OPTION_BUTTON_IDSTART + 1;
     private static final int NUMBEROFSETTINGS = SoundCategory.values().length;
@@ -27,13 +26,13 @@ public class GuiScreenSoundSettings extends GuiScreen {
 
     @Override
     public void initGui() {
-        guiTitle = I18n.format("gui.musicOnBackground.title");
-        this.buttonList.add(new GuiButton(BUTTON_START_ID + SoundCategory.MASTER.ordinal(), this.width / 2 - 155, this.height / 6 - 12, 310, 20, getDisplayString(SoundCategory.MASTER)));
+        guiTitle = I18n.format("gui.musicOnBackground.title"); // Todo replace buttons with sliders (the ones from the original sound options menu)
+        this.buttonList.add(new SliderButton(BUTTON_START_ID + SoundCategory.MASTER.ordinal(), this.width / 2 - 155, this.height / 6 - 12, SoundCategory.MASTER, true, this));
 
         int i = 2;
         for (SoundCategory sc : SoundCategory.values()) {
             if (sc != SoundCategory.MASTER) {
-                this.buttonList.add(new GuiButton(BUTTON_START_ID + sc.ordinal(), this.width / 2 - 155 + i % 2 * 160, this.height / 6 - 12 + 24 * (i >> 1), 150, 20, getDisplayString(sc)));
+                this.buttonList.add(new SliderButton(BUTTON_START_ID + sc.ordinal(), this.width / 2 - 155 + i % 2 * 160, this.height / 6 - 12 + 24 * (i >> 1), sc, false, this));
                 ++i;
             }
         }
@@ -41,9 +40,7 @@ public class GuiScreenSoundSettings extends GuiScreen {
         if (i % 2 == 1) // If it's odd
             i++; // This ensures that the following 2 buttons are on a new line
 
-        this.buttonList.add(new GuiButton(BUTTON_START_ID + NUMBEROFSETTINGS, this.width / 2 - 155 + i % 2 * 160, this.height / 6 - 12 + 24 * (i >> 1), 150, 20, getDisplayString("toggleAll")));
-        i++;
-        this.buttonList.add(new GuiButton(BUTTON_START_ID + NUMBEROFSETTINGS + 1, this.width / 2 - 155 + i % 2 * 160, this.height / 6 - 12 + 24 * (i >> 1), 150, 20, getDisplayString("reset")));
+        this.buttonList.add(new GuiButton(BUTTON_START_ID + NUMBEROFSETTINGS, this.width / 2 - 75, this.height / 6 - 12 + 24 * (i >> 1), 150, 20, I18n.format("gui.musicOnBackground.reset")));
         checkSettingsButton();
         checkResetButton();
 
@@ -52,65 +49,58 @@ public class GuiScreenSoundSettings extends GuiScreen {
 
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
-        if (button.enabled) {
-            if (button.id == 200)
+        if (button.enabled) { // The slider button are handled by the SliderButton Class
+            if (button.id == 200) // GUI done button
                 this.mc.displayGuiScreen(this.previousScreen);
-            else if (button.id >= BUTTON_START_ID && button.id <= BUTTON_START_ID + NUMBEROFSETTINGS + 1) {
-                if (button.id >= BUTTON_START_ID && button.id < BUTTON_START_ID + NUMBEROFSETTINGS) {
-                    SoundCategory sc = SoundCategory.values()[button.id - BUTTON_START_ID];
-                    ConfigurationHandler.toggleSetting(sc);
-                    button.displayString = getDisplayString(sc);
+            else if (button.id == BUTTON_START_ID + NUMBEROFSETTINGS) { // Reset
+                for (SoundCategory sc : SoundCategory.values()) {
+                    ConfigurationHandler.resetSetting(sc);
+
+                    for (GuiButton subButton : this.buttonList)
+                        if (subButton instanceof SliderButton && ((SliderButton) subButton).getSoundCategory().equals(sc)) // To prevent unnecessary number of calls
+                            ((SliderButton) subButton).updateButtonDisplayString();
+
                     String key = "musicInBackground" + sc.getName().substring(0, 1).toUpperCase(Locale.ENGLISH) + sc.getName().substring(1);
                     ConfigurationHandler.configuration.get(Configuration.CATEGORY_GENERAL, key, false).set(ConfigurationHandler.getSetting(sc));
-                } else if (button.id == BUTTON_START_ID + NUMBEROFSETTINGS) { // Toggle All
-                    for (SoundCategory sc : SoundCategory.values()) {
-                        GuiButton buttonToChange = this.buttonList.get(sc.ordinal());
-                        ConfigurationHandler.toggleSetting(sc);
-                        buttonToChange.displayString = getDisplayString(sc);
 
-                        String key = "musicInBackground" + sc.getName().substring(0, 1).toUpperCase(Locale.ENGLISH) + sc.getName().substring(1);
-                        ConfigurationHandler.configuration.get(Configuration.CATEGORY_GENERAL, key, false).set(ConfigurationHandler.getSetting(sc));
-                    }
-                } else if (button.id == BUTTON_START_ID + NUMBEROFSETTINGS + 1) { // Reset
-                    for (SoundCategory sc : SoundCategory.values()) {
-                        GuiButton buttonToChange = this.buttonList.get(sc.ordinal());
-                        ConfigurationHandler.resetSetting(sc);
-                        buttonToChange.displayString = getDisplayString(sc);
-
-                        String key = "musicInBackground" + sc.getName().substring(0, 1).toUpperCase(Locale.ENGLISH) + sc.getName().substring(1);
-                        ConfigurationHandler.configuration.get(Configuration.CATEGORY_GENERAL, key, false).set(ConfigurationHandler.getSetting(sc));
-                    }
+                    ConfigChangedEvent configEvent = new ConfigChangedEvent.OnConfigChangedEvent(References.MOD_ID, null, Minecraft.getMinecraft().theWorld != null, false);
+                    MinecraftForge.EVENT_BUS.post(configEvent);
+                    if (!configEvent.getResult().equals(Event.Result.DENY))
+                        MinecraftForge.EVENT_BUS.post(new ConfigChangedEvent.PostConfigChangedEvent(References.MOD_ID, null, Minecraft.getMinecraft().theWorld != null, false));
                 }
-
-                ConfigChangedEvent configEvent = new ConfigChangedEvent.OnConfigChangedEvent(References.MOD_ID, null, Minecraft.getMinecraft().theWorld != null, false);
-                MinecraftForge.EVENT_BUS.post(configEvent);
-                if (!configEvent.getResult().equals(Event.Result.DENY))
-                    MinecraftForge.EVENT_BUS.post(new ConfigChangedEvent.PostConfigChangedEvent(References.MOD_ID, null, Minecraft.getMinecraft().theWorld != null, false));
-
-                checkSettingsButton();
-                checkResetButton();
             }
+
+            checkResetButton(); // Check it properly? (it has a delay, issue maybe not caused here)
         }
     }
 
+    public void checkSettingsAndResetButton() {
+        checkSettingsButton();
+        checkResetButton();
+    }
+
     private void checkSettingsButton() {
-        boolean enableButtons = ConfigurationHandler.getSetting(SoundCategory.MASTER);
+        boolean enableButtons = ConfigurationHandler.getSetting(SoundCategory.MASTER) > 0.0d;
 
         for (GuiButton subButton : this.buttonList)
-            if (subButton.id > BUTTON_START_ID + SoundCategory.MASTER.ordinal() && subButton.id < BUTTON_START_ID + NUMBEROFSETTINGS)
+            if (subButton instanceof SliderButton) {
+                if (((SliderButton) subButton).getSoundCategory().equals(SoundCategory.MASTER))
+                    continue;
+
                 subButton.enabled = enableButtons;
+            }
     }
 
     private void checkResetButton() {
         boolean allSettingsAreDefault = true;
         for (SoundCategory sc : SoundCategory.values())
-            if (ConfigurationHandler.getSetting(sc)) {
+            if (ConfigurationHandler.getSetting(sc) != (sc.equals(SoundCategory.MASTER) ? 0.0d : 100.0d)) {
                 allSettingsAreDefault = false;
                 break;
             }
 
         for (GuiButton resetButton : this.buttonList)
-            if (resetButton.id == BUTTON_START_ID + NUMBEROFSETTINGS + 1) {
+            if (resetButton.id == BUTTON_START_ID + NUMBEROFSETTINGS) {
                 resetButton.enabled = !allSettingsAreDefault;
                 break;
             }
@@ -121,16 +111,5 @@ public class GuiScreenSoundSettings extends GuiScreen {
         this.drawDefaultBackground();
         this.drawCenteredString(this.fontRendererObj, guiTitle, this.width / 2, 15, 16777215);
         super.drawScreen(mouseX, mouseY, partialTicks);
-    }
-
-    private String getDisplayString(SoundCategory sc) {
-        if (sc == null)
-            return I18n.format("gui.musicOnBackground.toggleAll");
-        else
-            return I18n.format("soundCategory." + sc.getName()) + ": " + (ConfigurationHandler.getSetting(sc) ? I18n.format("options.on") : I18n.format("options.off"));
-    }
-
-    private String getDisplayString(String nameOfButton) {
-        return I18n.format("gui.musicOnBackground." + nameOfButton);
     }
 }
