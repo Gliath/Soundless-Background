@@ -17,7 +17,7 @@ group = "gliath.sb"
 archivesBaseName = "SoundlessBackground"
 
 minecraft {
-    version = "1.9.4-12.17.0.1963"
+    version = "1.10.2-12.18.1.2089"
     runDir = "run"
     mappings = "snapshot_20160518"
 }
