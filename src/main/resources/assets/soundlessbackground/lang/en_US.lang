@@ -1,20 +1,3 @@
 #GuiButton name
-gui.musicOnBackground=Background Settings
-gui.musicOnBackground.title=Music in Background Options
-gui.musicOnBackground.reset=Reset to default
-
-#ModConfig Gui
-sb.configgui.musicOnBackground.title=Soundless Background Configuration
-
-sb.configgui.musicOnBackground.master=Percentage Master
-sb.configgui.musicOnBackground.music=Percentage Music
-sb.configgui.musicOnBackground.record=Percentage Records
-sb.configgui.musicOnBackground.weather=Percentage Weather
-sb.configgui.musicOnBackground.block=Percentage Blocks
-sb.configgui.musicOnBackground.hostile=Percentage Hostile
-sb.configgui.musicOnBackground.neutral=Percentage Neutral
-sb.configgui.musicOnBackground.player=Percentage Players
-sb.configgui.musicOnBackground.ambient=Percentage Ambient
-sb.configgui.musicOnBackground.voice=Percentage Voice
-
-sb.configgui.musicOnBackground.comment=This setting silences the %s category by the percentage specified, if Minecraft is in the background.
+gui.musicOnBackground=Music in Background
+sb.configgui.musicOnBackground=Music ON in background

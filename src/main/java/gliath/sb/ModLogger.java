@@ -1,4 +1,4 @@
-package gliath.sb.utilities;
+package gliath.sb;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;

@@ -1,4 +1,4 @@
-package gliath.sb.configgui;
+package gliath.sb.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
